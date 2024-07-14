@@ -6,11 +6,8 @@ const client = new pg.Client(
 const server = express();
 
 const init = async () => {
-    //wait for the client to connect to the database
     await client.connect();
     console.log("connected to database");
-  
-    //create SQL to wipe the database and create a new table based on our schema
     let SQL = `DROP TABLE IF EXISTS flavors;
       CREATE TABLE flavors(
       id SERIAL PRIMARY KEY,
@@ -20,11 +17,10 @@ const init = async () => {
       updated_at TIMESTAMP DEFAULT now()
      
       );`;
-    //wait for the database to process the query
+    
     await client.query(SQL);
     console.log("tables created");
   
-    //create SQL statement to insert 3 new rows of data into our table
     SQL = `INSERT INTO flavors(name, is_favorite) VALUES('Mint oreo', true);
       INSERT INTO flavors(name, is_favorite) VALUES('Birthday cake', false);
       INSERT INTO flavors(name, is_favorite) VALUES('Chocolate chip Cookiedough', false);
@@ -34,11 +30,10 @@ const init = async () => {
       INSERT INTO flavors(name, is_favorite) VALUES('Vanilla', false);
       INSERT INTO flavors(name, is_favorite) VALUES('Chocolate', false);
       `;
-    //wait for the database to process the query
+    
     await client.query(SQL);
     console.log("data seeded");
-  
-    //have the server listen on a port
+
     const port = process.env.PORT || 3000;
     server.listen(port, () => console.log(`listening on port ${port}`));
 
